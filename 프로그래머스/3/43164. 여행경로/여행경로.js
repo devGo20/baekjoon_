@@ -17,5 +17,5 @@ function solution(tickets) {
     }
   }
   dfs('ICN', ['ICN']);
-  return answer.sort()[0];
+  return answer[0];
 }
