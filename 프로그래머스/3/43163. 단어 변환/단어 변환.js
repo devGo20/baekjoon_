@@ -12,10 +12,9 @@ function solution(begin, target, words) {
     for (let i = 0; i < words.length; i++) {
       if (visited[i]) continue;
       if (checkChange(words[i], start)) {
-        // console.log('hi?', start, words[i]);
         visited[i] = true;
         dfs(words[i], count + 1);
-        visited[i] = false;
+        visited[i] = false; // 백트래킹
       }
     }
   }
