@@ -21,26 +21,18 @@ const sevenSeg = [
   0b1111011 // 9
 ]
 const currentFloor = String(X).padStart(K, '0')
-const currentFloorBit = changeBitArr(currentFloor)
+
 let answer = 0
 for (let i = 1; i <= N; i++) {
   if (i === X) continue
-  const targetBit = changeBitArr(String(i).padStart(K, '0'))
+  const target = String(i).padStart(K, '0')
   let count = 0
   for (let i = 0; i < K; i++) {
-    const xor = (targetBit[i] ^ currentFloorBit[i]).toString(2)
+    const xor = (sevenSeg[target[i]] ^ sevenSeg[currentFloor[i]]).toString(2)
     count += xor.split('1').length - 1
   }
   if (count <= P) {
     answer += 1
   }
-}
-
-function changeBitArr (str) {
-  const bit = []
-  for (const ch of str) {
-    bit.push(sevenSeg[ch])
-  }
-  return bit
 }
 console.log(answer)
