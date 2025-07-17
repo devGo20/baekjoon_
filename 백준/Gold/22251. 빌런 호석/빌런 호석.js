@@ -7,7 +7,6 @@ const input = fs
   .map(Number)
 
 const [N, K, P, X] = input
-
 const sevenSeg = [
   0b1111110, // 0
   0b0110000, // 1
@@ -28,11 +27,23 @@ for (let i = 1; i <= N; i++) {
   const target = String(i).padStart(K, '0')
   let count = 0
   for (let i = 0; i < K; i++) {
-    const xor = (sevenSeg[target[i]] ^ sevenSeg[currentFloor[i]]).toString(2)
-    count += xor.split('1').length - 1
+    const xor = (sevenSeg[Number(target[i])] ^
+      sevenSeg[Number(currentFloor[i])])
+    count += countBits(xor)
+    if (count > P) break // 조기 탈출
   }
   if (count <= P) {
     answer += 1
   }
 }
+
+function countBits (x) {
+  let count = 0
+  while (x > 0) {
+    count += x & 1
+    x >>= 1
+  }
+  return count
+}
+
 console.log(answer)
