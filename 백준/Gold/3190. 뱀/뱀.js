@@ -7,7 +7,7 @@ let line = 0;
 // 보드 크기
 const N = parseInt(input[line++]);
 
-// 사과 위치
+// 사과 개수
 const K = parseInt(input[line++]);
 const apples = [];
 for (let i = 0; i < K; i++) {
@@ -15,7 +15,7 @@ for (let i = 0; i < K; i++) {
   apples.push([r, c]);
 }
 
-// 방향 전환
+// 방향 전환 횟수
 const L = parseInt(input[line++]);
 const moves = [];
 for (let i = 0; i < L; i++) {
@@ -23,21 +23,19 @@ for (let i = 0; i < L; i++) {
   moves.push([parseInt(X), C]);
 }
 
-// 방향: 0=오른쪽,1=아래,2=왼쪽,3=위
-const directions = [
+// L: left, D: right 
+const headDirections = [
   [0, 1],   // 오른쪽
   [1, 0],   // 아래
   [0, -1],  // 왼쪽
   [-1, 0],  // 위
 ];
-
-let snake = [[1, 1]]; // 뱀 좌표: 머리부터 꼬리
-let time = 0;
-let head = 0;
-
-while (true) {
-  time++;
-  const [dy, dx] = directions[head];
+const snake = [[1, 1]]
+let time = 0
+let head = 0
+while (true) {  
+    time++;
+  const [dy, dx] = headDirections[head];
   const [curY, curX] = snake[0]; // 머리
   const newY = curY + dy;
   const newX = curX + dx;
@@ -70,4 +68,6 @@ while (true) {
     if (C === 'D') head = (head + 1) % 4;   // 오른쪽 회전
     else head = (head + 3) % 4;             // 왼쪽 회전
   }
+
+    
 }
