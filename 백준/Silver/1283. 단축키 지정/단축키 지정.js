@@ -4,28 +4,33 @@ const path = process.platform === "linux" ? "/dev/stdin" : "../input.txt";
 const input = fs.readFileSync(path, "utf-8").trim().split('\n')
 const n = input[0]
 const words = input.slice(1)
-const shortcutKey = []
+const shortcutKey = new Set()
+const answer = []
+
 for (const word of words) {
   const parts = word.split(' ')
   let find = false;
   for (let i = 0; i < parts.length; i++) {
-    if (!shortcutKey.includes(parts[i][0].toUpperCase())) {
-      shortcutKey.push(parts[i][0].toUpperCase())
-      parts[i] = `[${parts[i][0]}]${parts[i].slice(1)}`
+    const firstCh = parts[i][0]
+    if (!shortcutKey.has(firstCh.toUpperCase())) {
+      shortcutKey.add(firstCh.toUpperCase())
+      parts[i] = `[${firstCh}]${parts[i].slice(1)}`
       find = true;
-      console.log(parts.join(' '))
+      answer.push(parts.join(' '))
       break
     }
   }
   if (!find) {
     for (let i = 0; i < word.length; i++) {
-      if (word[i] !== ' ' && !shortcutKey.includes(word[i].toUpperCase())) {
-        shortcutKey.push(word[i].toUpperCase())
-        console.log(word.slice(0, i) + `[${word[i]}]` + word.slice(i + 1, word.length))
+      if (word[i] !== ' ' && !shortcutKey.has(word[i].toUpperCase())) {
+        shortcutKey.add(word[i].toUpperCase())
+        answer.push(word.slice(0, i) + `[${word[i]}]` + word.slice(i + 1, word.length))
         find = true
         break
       }
     }
-    if (!find) console.log(word)
+    if (!find) answer.push(word)
   }
 }
+
+console.log(answer.join('\n'))
