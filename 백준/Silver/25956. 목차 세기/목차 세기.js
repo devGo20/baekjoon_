@@ -3,46 +3,51 @@ const path = process.platform === "linux" ? "/dev/stdin" : "../input.txt";
 
 const input = fs.readFileSync(path, "utf8").trim().split("\n").map(Number);
 const n = input[0];
-const titles = input.slice(1);
+const titles = input.slice(1).map(Number);
 
-const answer = new Array(n).fill(0);
 const stack = [];
+const answer = Array(n).fill(0);
 
-// 첫 번째 제목(1레벨) 처리
-if (titles[0] !== 1) {
-  console.log(-1);
-  process.exit(0);
+
+if (titles.at(0) !== 1) {
+  return console.log(-1)
 }
-stack.push({ level: 1, index: 0 });
-
 for (let i = 1; i < n; i++) {
-  const currentLevel = titles[i];
-
-  // 현재 레벨보다 높은 레벨의 제목들 스택에서 제거
-  while (stack.length > 0 && stack.at(-1).level >= currentLevel) {
-    stack.pop();
+  if (titles[i] - titles[i - 1] > 1) {
+    return console.log(-1)
   }
-
-  // 상위 제목이 없는데 현재 제목 레벨이 1이 아닐 경우 (오류)
-  if (stack.length === 0 && currentLevel !== 1) {
-    console.log(-1);
-    process.exit(0);
-  }
-
-  // 유효성 검사: 상위 제목 레벨 + 1 == 현재 제목 레벨이 아닐 경우 (오류)
-  if (stack.length > 0 && stack.at(-1).level + 1 !== currentLevel) {
-    console.log(-1);
-    process.exit(0);
-  }
-
-  // 상위 제목의 하위 제목 수 증가
-  if (stack.length > 0) {
-    const parentIndex = stack.at(-1).index;
-    answer[parentIndex]++;
-  }
-
-  // 현재 제목을 스택에 추가
-  stack.push({ level: currentLevel, index: i });
 }
+for (let i = n; i >= 0; i--) {
+  while (stack.length !== 0 && stack.at(-1) - 1 === titles[i]) {
+    answer[i]++
+    stack.pop()
+  }
+  stack.push(titles[i])
+}
+console.log(answer.join('\n'))
 
-console.log(answer.join("\n"));
+// 2 3 2 2 1 인 경우 안됨
+if (false) {
+  for (const title of titles) {
+
+    if (stack.length !== 0 && stack.at(-1) - title >= 2) {
+      console.log(-1);
+      process.exit(0);
+    } else {
+      if (stack.at(-1) > title || stack.length === 0) {
+        answer.push(stack.length);
+      } else if (stack.at(-1) === title) {
+        answer.push(0)
+      }
+
+      while (stack.length && stack.at(-1) > title) {
+        stack.pop();
+      }
+      if (title !== 1) {
+        stack.push(title);
+      }
+    }
+  }
+
+  console.log(answer.reverse().join("\n"));
+}
